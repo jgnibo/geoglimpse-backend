@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose";
 import { IPlace } from "../utils/types";
 
 const placeSchema = new Schema<IPlace>({
-  creatorId: { type: String, required: true },
+  creatorId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   name: { type: String, required: true },
   description: { type: String },
   imageUrl: { type: String },
