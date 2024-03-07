@@ -5,12 +5,19 @@ import user_services from '../services/user_services';
 import authentication from '../utils/jwt';
 import jwt from 'jsonwebtoken';
 
-const verifyUser: RequestHandler = async (req, res) => {
+interface TokenPayload {
+  // Define the properties you expect in your token payload here
+  userId: string;
+  // Add more properties as needed
+}
+
+/* const verifyUser: RequestHandler = async (req, res) => {
   const { token } = req.cookies;
   if (!token) {
     return res.json({ status: false });
   }
-  jwt.verify(token, process.env.TOKEN_KEY as string, async (err, decoded) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  jwt.verify(token as string, process.env.TOKEN_KEY as Secret, async (err, decoded: any) => {
     if (err) {
       return res.json({ status: false });
     }
@@ -18,23 +25,35 @@ const verifyUser: RequestHandler = async (req, res) => {
     if (user) return res.json({ status: true, user });
     return res.json({ status: false });
   });
+}; */
+
+const verifyUser: RequestHandler = async (req, res) => {
+  const { token } = req.cookies;
+  if (!token) {
+    return res.json({ status: false });
+  }
+  const decoded = jwt.verify(token as string, process.env.TOKEN_KEY as string) as TokenPayload;
+
+  const user = await User.findById(decoded.userId);
+  if (user) return res.json({ status: true, user });
+  return res.json({ status: false });
 };
 
 const register: RequestHandler = async (req, res) => {
   try {
     const { email, username, password } = req.body;
 
-    const existingUser = await User.findOne({ 
-      $or: [{ email }, { username }] 
+    const existingUser = await User.findOne({
+      $or: [{ email }, { username }]
     });
-    
+
     if (existingUser) {
       return res.json({ message: 'User already exists' });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await user_services.createUser(email, username, hashedPassword);
-    const token = authentication.createSecretToken(user._id);
+    const token = authentication.createSecretToken(user._id as string);
 
     res.cookie('token', token, {
       // withCredentials: true,

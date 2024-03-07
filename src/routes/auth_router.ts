@@ -6,9 +6,6 @@ const authRouter = Router();
 authRouter.route('/register')
   .post(authController.register);
 
-authRouter.route('/register/:invitationToken')
-  .post(authController.registerWithInvitation);
-
 authRouter.route('/login')
   .post(authController.login);
 
