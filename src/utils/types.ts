@@ -2,10 +2,9 @@ import mongoose from "mongoose";
 
 export interface IUser {
   _id?: mongoose.Schema.Types.ObjectId | string;
-  firstName: string;
-  lastName: string;
   username: string
   email: string;
+  password: string;
 }
 
 export interface IPlace {
