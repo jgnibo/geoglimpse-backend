@@ -6,9 +6,7 @@ import authentication from '../utils/jwt';
 import jwt from 'jsonwebtoken';
 
 interface TokenPayload {
-  // Define the properties you expect in your token payload here
-  userId: string;
-  // Add more properties as needed
+  id: string;
 }
 
 const verifyUser: RequestHandler = async (req, res) => {
@@ -25,7 +23,10 @@ const verifyUser: RequestHandler = async (req, res) => {
   console.log('token', token);
   const decoded = jwt.verify(token as string, process.env.TOKEN_KEY as string) as TokenPayload;
 
-  const user = await User.findById(decoded.userId);
+  console.log('decoded', decoded);
+  console.log('decoded.userId', decoded.id);
+
+  const user = await User.findById(decoded.id);
   if (user) return res.json({ status: true, user });
   return res.json({ status: false });
 };

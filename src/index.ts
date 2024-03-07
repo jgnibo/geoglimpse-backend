@@ -6,6 +6,7 @@ import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import router from './routes';
 import morgan from 'morgan';
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.use(bodyParser.json());
 
 // enable morgan for logging
 app.use(morgan('dev'));
+app.use(cookieParser());
 
 // enable/disable cross origin resource sharing if necessary
 // app.use(cors());
