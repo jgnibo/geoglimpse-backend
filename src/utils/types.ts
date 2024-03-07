@@ -5,6 +5,7 @@ export interface IUser {
   username: string
   email: string;
   password: string;
+  tileFrequency: Map<string, number>;
 }
 
 export interface IPlace {
