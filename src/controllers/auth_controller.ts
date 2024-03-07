@@ -11,27 +11,18 @@ interface TokenPayload {
   // Add more properties as needed
 }
 
-/* const verifyUser: RequestHandler = async (req, res) => {
-  const { token } = req.cookies;
-  if (!token) {
-    return res.json({ status: false });
-  }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  jwt.verify(token as string, process.env.TOKEN_KEY as Secret, async (err, decoded: any) => {
-    if (err) {
-      return res.json({ status: false });
-    }
-    const user = await User.findById(decoded?.id);
-    if (user) return res.json({ status: true, user });
-    return res.json({ status: false });
-  });
-}; */
-
 const verifyUser: RequestHandler = async (req, res) => {
+  if (!req.cookies) {
+    return res.json({ status: false });
+  }
+
   const { token } = req.cookies;
+
   if (!token) {
     return res.json({ status: false });
   }
+
+  console.log('token', token);
   const decoded = jwt.verify(token as string, process.env.TOKEN_KEY as string) as TokenPayload;
 
   const user = await User.findById(decoded.userId);
