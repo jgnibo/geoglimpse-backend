@@ -19,15 +19,17 @@ const verifyUser: RequestHandler = async (req, res) => {
   if (!token) {
     return res.json({ status: false });
   }
-
-  console.log('token', token);
   const decoded = jwt.verify(token as string, process.env.TOKEN_KEY as string) as TokenPayload;
-
-  console.log('decoded', decoded);
-  console.log('decoded.userId', decoded.id);
-
   const user = await User.findById(decoded.id);
-  if (user) return res.json({ status: true, user });
+  if (user) {
+    // get random tile index
+    const tileIndex = Math.floor(Math.random() * 1000);
+    const frequency = Math.floor(Math.random() * 10);
+    user.tileFrequency.set(tileIndex.toString(), frequency);
+    console.log(user.tileFrequency)
+    await user.save();
+    return res.json({ status: true, user });
+  }
   return res.json({ status: false });
 };
 

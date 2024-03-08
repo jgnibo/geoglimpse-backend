@@ -5,6 +5,11 @@ const userSchema = new Schema<IUser>({
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  tileFrequency: {
+    type: Map,
+    of: Number,
+    default: new Map()
+  }
 }, {
   timestamps: true,
 });
