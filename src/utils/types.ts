@@ -17,9 +17,14 @@ export interface IPlace {
   location: string;
 }
 
-interface IPolygon {
+export interface IPolygon {
   type: string,
   coordinates: number[][][],
+}
+
+export interface IPoint {
+  type: string,
+  coordinates: number[],
 }
 
 export interface ITile {
