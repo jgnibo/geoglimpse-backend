@@ -8,6 +8,7 @@ const userSchema = new Schema<IUser>({
   tileFrequency: {
     type: Map,
     of: Number,
+    default: new Map()
   }
 }, {
   timestamps: true,
