@@ -15,6 +15,7 @@ export interface IPlace {
   description: string;
   imageUrl?: string;
   location: string;
+  isPublic: boolean;
 }
 
 export interface IPolygon {

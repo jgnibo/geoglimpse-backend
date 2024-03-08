@@ -38,6 +38,32 @@ const getPlaceByCreatorId = async (creatorId: string) => {
   }
 }
 
+
+// Viewable is the union of places created by the user, as well as places that are public
+const getViewablePlaces = async (creatorId: string) => {
+  try {
+    const places = await Place.find({
+      $or: [
+        { creatorId: creatorId },
+        { isPublic: true }
+      ]
+    })
+    return places;
+  } catch (error) {
+    throw new Error(`Error getting available places: ${error}`);
+  }
+}
+
+// Just all public places
+const getPublicPlaces = async () => {
+  try {
+    const places = await Place.find({ isPublic: true });
+    return places
+  } catch (error) {
+    throw new Error(`Error getting public places: ${error}`)
+  }
+}
+
 const updatePlace = async (placeId: string, placeData: IPlace) => {
   try {
     const place = await Place.findByIdAndUpdate(placeId, placeData);
@@ -70,6 +96,8 @@ export default {
   getPlaces,
   getPlaceById,
   getPlaceByCreatorId,
+  getViewablePlaces,
+  getPublicPlaces,
   updatePlace,
   deletePlace,
   deleteAllPlaces

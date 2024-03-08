@@ -3,8 +3,8 @@ import { placeServices } from "../services";
 
 const createPlace: RequestHandler = async (req, res) => {
   try {
-    const { creatorId, name, description, imageUrl, location } = req.body;
-    const newPlace = await placeServices.createPlace({ creatorId, name, description, imageUrl, location });
+    const { creatorId, name, description, imageUrl, location, isPublic } = req.body;
+    const newPlace = await placeServices.createPlace({ creatorId, name, description, imageUrl, location, isPublic });
     res.status(201).json(newPlace);
   } catch (err) {
     console.error(err);
@@ -38,6 +38,28 @@ const getPlaceByCreatorId: RequestHandler = async (req, res) => {
     const { creatorId } = req.params;
     const place = await placeServices.getPlaceByCreatorId(creatorId);
     res.status(200).json(place);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error', error });
+  }
+}
+
+const getViewablePlaces: RequestHandler = async (req, res) => {
+  try {
+    const { creatorId } = req.params;
+    const places = await placeServices.getViewablePlaces(creatorId);
+    res.status(200).json(places);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error', error });
+
+  }
+}
+
+const getPublicPlaces: RequestHandler = async (req, res) => {
+  try {
+    const places = await placeServices.getPublicPlaces();
+    res.status(200).json(places);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server Error', error });
@@ -82,6 +104,8 @@ const placeController = {
   getPlaces,
   getPlaceById,
   getPlaceByCreatorId,
+  getViewablePlaces,
+  getPublicPlaces,
   updatePlace,
   deletePlace,
   deleteAllPlaces
