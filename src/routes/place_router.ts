@@ -14,7 +14,13 @@ placeRouter.route('/:tileId')
   .patch(placeController.updatePlace)
   .delete(placeController.deletePlace);
 
-placeRouter.route('/creator/:indexedId')
+placeRouter.route('/creator/:creatorId')
   .get(placeController.getPlaceByCreatorId);
+
+placeRouter.route('/viewable/:creatorId')
+  .get(placeController.getViewablePlaces);
+
+placeRouter.route('/public')
+  .get(placeController.getPublicPlaces);
 
 export default placeRouter;

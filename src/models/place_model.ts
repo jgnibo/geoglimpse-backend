@@ -6,7 +6,8 @@ const placeSchema = new Schema<IPlace>({
   name: { type: String, required: true },
   description: { type: String },
   imageUrl: { type: String },
-  location: { type: String, required: true }
+  location: { type: String, required: true },
+  isPublic: { type: Boolean, default: false }
 }, {
   timestamps: true,
 });
