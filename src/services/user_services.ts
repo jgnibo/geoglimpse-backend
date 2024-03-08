@@ -38,6 +38,24 @@ const updateUser = async (userId: string, userData: IUser) => {
   }
 }
 
+const updateUserTileFrequencyMap = async (userId: string, tileIndexedId: number, frequency: number) => {
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new Error(`User not found`);
+    }
+
+    const tileIdStr = tileIndexedId.toString();
+    const currFrequency = user.tileFrequency.get(tileIdStr) || 0;
+    user.tileFrequency.set(tileIdStr, currFrequency + frequency);
+
+    const updatedUser = await user.save();
+    return updatedUser;
+  } catch (error) {
+    throw new Error(`Error updating user tile frequency map: ${error}`);
+  }
+}
+
 const deleteUser = async (userId: string) => {
   try {
     const user = await User.findByIdAndDelete(userId);
@@ -62,6 +80,7 @@ export default {
   getUsers,
   getUserById,
   updateUser,
+  updateUserTileFrequencyMap,
   deleteUser,
   deleteAllUsers
 };

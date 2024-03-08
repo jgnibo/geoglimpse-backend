@@ -6,9 +6,9 @@ import bodyParser from 'body-parser';
 import router from './routes';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
-import { createServer } from 'http'; // Import createServer
-import { Server as WebSocketServer } from 'ws'; // Import WebSocketServer
-import { tileServices } from './services';
+import { createServer } from 'http';
+import { Server as WebSocketServer } from 'ws';
+import { tileServices, userServices } from './services';
 
 dotenv.config();
 
@@ -29,27 +29,32 @@ wss.on('connection', (ws) => {
   const lastDate = new Date();
   const newDate = new Date();
 
+  // const previousTile = 0;
+
   ws.on('message', async (message) => {
     console.log(`Received message: ${message}`);
     const locationData: LocationMessage = JSON.parse(message.toString());
     console.log(locationData.latitude, locationData.longitude);
-    //console.log(message.latitude, message.longitude);
     newDate.setTime(Date.now());
 
+    // Check time spent since last message, credit last tile with ticks
     const secondsElapsed = (newDate.getTime() - lastDate.getTime()) / 1000;
     const ticks = secondsElapsed / 5;
-    console.log('num ricks', ticks);
+    lastDate.setTime(newDate.getTime());
+    console.log('num ticks', ticks);
 
-    // Add ticks to last square's frequency map
+    // Right now this is crediting new tile with ticks. Need to credit old tile and then credit new tile with 1.
 
     try {
       const foundTile = await tileServices.findIntersectingTile({ type: 'Point', coordinates: [locationData.longitude, locationData.latitude] })
-      console.log(foundTile);
+      if (foundTile) {
+        console.log('Adding ticks to tile', ticks, foundTile.indexedId);
+        const confirmation = await userServices.updateUserTileFrequencyMap('65ea4d67b018e631a0b4003f', foundTile.indexedId, ticks);
+        console.log('CONFIRMATION HERE', confirmation.tileFrequency.get(foundTile.indexedId.toString()));
+      }
     } catch (error) {
       console.error(error);
     }
-
-
     // Add one to next square's frequency map
 
     console.log(lastDate)
