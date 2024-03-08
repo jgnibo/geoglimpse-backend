@@ -1,5 +1,5 @@
 import Tile from "../models/tile_model";
-import { ITile } from "../utils/types";
+import { IPoint, ITile } from "../utils/types";
 
 const createTile = async (tileData: ITile) => {
   try {
@@ -38,6 +38,24 @@ const getTileByIndexedId = async (indexedId: number) => {
   }
 }
 
+const findIntersectingTile = async (locationPoint: IPoint) => {
+  try {
+    const tile = await Tile.findOne({
+      polygon: {
+        $geoIntersects: {
+          $geometry: {
+            type: "Point",
+            coordinates: locationPoint.coordinates
+          }
+        }
+      }
+    });
+    return tile;
+  } catch (error) {
+    throw new Error(`Error finding intersecting tile: ${error}`);
+  }
+}
+
 const updateTile = async (tileId: string, tileData: ITile) => {
   try {
     const tile = await Tile.findByIdAndUpdate(tileId, tileData);
@@ -70,6 +88,7 @@ export default {
   getTiles,
   getTileById,
   getTileByIndexedId,
+  findIntersectingTile,
   updateTile,
   deleteTile,
   deleteAllTiles
