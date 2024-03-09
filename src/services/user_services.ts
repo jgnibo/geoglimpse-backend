@@ -29,6 +29,15 @@ const getUserById = async (userId: string) => {
   }
 }
 
+const getUserByUsername = async (username: string) => {
+  try {
+    const user = await User.findOne({ username });
+    return user;
+  } catch (error) {
+    throw new Error(`Error getting user by username: ${error}`);
+  }
+}
+
 const updateUser = async (userId: string, userData: IUser) => {
   try {
     const user = await User.findByIdAndUpdate(userId, userData);
@@ -47,6 +56,7 @@ const updateUserTileFrequencyMap = async (userId: string, tileIndexedId: number,
 
     const tileIdStr = tileIndexedId.toString();
     const currFrequency = user.tileFrequency.get(tileIdStr) || 0;
+    console.log('NUM BEFORE ADDIng', currFrequency);
     user.tileFrequency.set(tileIdStr, currFrequency + frequency);
 
     const updatedUser = await user.save();
@@ -79,6 +89,7 @@ export default {
   createUser,
   getUsers,
   getUserById,
+  getUserByUsername,
   updateUser,
   updateUserTileFrequencyMap,
   deleteUser,

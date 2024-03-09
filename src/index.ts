@@ -49,7 +49,7 @@ wss.on('connection', (ws) => {
       const foundTile = await tileServices.findIntersectingTile({ type: 'Point', coordinates: [locationData.longitude, locationData.latitude] })
       if (foundTile) {
         console.log('Adding ticks to tile', ticks, foundTile.indexedId);
-        const confirmation = await userServices.updateUserTileFrequencyMap('65ea4d67b018e631a0b4003f', foundTile.indexedId, ticks);
+        const confirmation = await userServices.updateUserTileFrequencyMap('65eac259011b821b768653a3', foundTile.indexedId, ticks);
         console.log('CONFIRMATION HERE', confirmation.tileFrequency.get(foundTile.indexedId.toString()));
       }
     } catch (error) {
@@ -60,7 +60,6 @@ wss.on('connection', (ws) => {
     console.log(lastDate)
   });
 });
-
 
 // enable json message body for posting data to API
 app.use(bodyParser.urlencoded({ extended: true }));

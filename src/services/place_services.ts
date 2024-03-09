@@ -82,6 +82,26 @@ const deletePlace = async (placeId: string) => {
   }
 }
 
+const discoverPlace = async (placeId: string, userId: string) => {
+  try {
+    const place = await Place.findById(placeId);
+
+    if (!place) {
+      throw new Error(`Place not found`);
+    }
+
+    const discoveredByEntry = {
+      user: userId,
+      discoveredDate: new Date(),
+    }
+
+    place.discoveredBy.push(discoveredByEntry);
+    await place.save();
+  } catch (error) {
+    throw new Error(`Error discovering place: ${error}`)
+  }
+}
+
 const deleteAllPlaces = async () => {
   try {
     const places = await Place.deleteMany();
@@ -100,5 +120,6 @@ export default {
   getPublicPlaces,
   updatePlace,
   deletePlace,
+  discoverPlace,
   deleteAllPlaces
 }

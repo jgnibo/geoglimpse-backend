@@ -4,7 +4,8 @@ import { placeServices } from "../services";
 const createPlace: RequestHandler = async (req, res) => {
   try {
     const { creatorId, name, description, imageUrl, location, isPublic } = req.body;
-    const newPlace = await placeServices.createPlace({ creatorId, name, description, imageUrl, location, isPublic });
+    const discoveredBy = [{ user: creatorId, discoveredDate: new Date() }];
+    const newPlace = await placeServices.createPlace({ creatorId, name, description, imageUrl, location, isPublic, discoveredBy });
     res.status(201).json(newPlace);
   } catch (err) {
     console.error(err);
@@ -89,6 +90,17 @@ const deletePlace: RequestHandler = async (req, res) => {
   }
 }
 
+const discoverPlace: RequestHandler = async (req, res) => {
+  try {
+    const { placeId, userId } = req.body;
+    const discoveredPlace = await placeServices.discoverPlace(placeId, userId);
+    res.status(200).json(discoveredPlace);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error', error });
+  }
+}
+
 const deleteAllPlaces: RequestHandler = async (req, res) => {
   try {
     const deletedPlaces = await placeServices.deleteAllPlaces();
@@ -108,6 +120,7 @@ const placeController = {
   getPublicPlaces,
   updatePlace,
   deletePlace,
+  discoverPlace,
   deleteAllPlaces
 }
 

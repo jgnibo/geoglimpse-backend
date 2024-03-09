@@ -8,15 +8,23 @@ export interface IUser {
   tileFrequency: Map<string, number>;
 }
 
+export interface IDiscoveredBy {
+  user: mongoose.Schema.Types.ObjectId | string;
+  discoveredDate: Date;
+}
+
 export interface IPlace {
   _id?: mongoose.Schema.Types.ObjectId | string;
   creatorId: mongoose.Schema.Types.ObjectId | string;
   name: string;
   description: string;
   imageUrl?: string;
-  location: string;
+  location: IPoint;
   isPublic: boolean;
+  discoveredBy: IDiscoveredBy[];
 }
+
+
 
 export interface IPolygon {
   type: string,

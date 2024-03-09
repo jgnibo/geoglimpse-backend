@@ -24,6 +24,17 @@ const getUserById: RequestHandler = async (req, res) => {
   }
 }
 
+const getUserByUsername: RequestHandler = async (req, res) => {
+  try {
+    const { username } = req.params;
+    const user = await userServices.getUserByUsername(username);
+    res.status(200).json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error', error });
+  }
+}
+
 const updateUser: RequestHandler = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -60,6 +71,7 @@ const deleteAllUsers: RequestHandler = async (req, res) => {
 const userController = {
   getUsers,
   getUserById,
+  getUserByUsername,
   updateUser,
   deleteUser,
   deleteAllUsers

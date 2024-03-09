@@ -9,7 +9,7 @@ placeRouter.route('/')
   .get(placeController.getPlaces)
   .delete(placeController.deleteAllPlaces);
 
-placeRouter.route('/:tileId')
+placeRouter.route('/:placeId')
   .get(placeController.getPlaceById)
   .patch(placeController.updatePlace)
   .delete(placeController.deletePlace);
@@ -22,5 +22,9 @@ placeRouter.route('/viewable/:creatorId')
 
 placeRouter.route('/public')
   .get(placeController.getPublicPlaces);
+
+
+placeRouter.route('/discover')
+  .post(placeController.discoverPlace);
 
 export default placeRouter;
