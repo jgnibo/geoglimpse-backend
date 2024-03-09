@@ -26,7 +26,7 @@ const getUserById: RequestHandler = async (req, res) => {
 
 const getUserByUsername: RequestHandler = async (req, res) => {
   try {
-    const { username } = req.params;
+    const { username } = req.body;
     const user = await userServices.getUserByUsername(username);
     res.status(200).json(user);
   } catch (error) {

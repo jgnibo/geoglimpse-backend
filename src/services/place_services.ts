@@ -13,7 +13,7 @@ const createPlace = async (placeData: IPlace) => {
 
 const getPlaces = async () => {
   try {
-    const places = await Place.find();
+    const places = await Place.find().populate('discoveredBy.user', 'username');
     return places;
   } catch (error) {
     throw new Error(`Error getting places: ${error}`);
@@ -22,7 +22,7 @@ const getPlaces = async () => {
 
 const getPlaceById = async (placeId: string) => {
   try {
-    const place = await Place.findById(placeId);
+    const place = await Place.findById(placeId).populate('discoveredBy.user', 'username');
     return place;
   } catch (error) {
     throw new Error(`Error getting place by placeId: ${error}`);
@@ -31,7 +31,7 @@ const getPlaceById = async (placeId: string) => {
 
 const getPlaceByCreatorId = async (creatorId: string) => {
   try {
-    const place = await Place.find({ creatorId });
+    const place = await Place.find({ creatorId }).populate('discoveredBy.user', 'username');
     return place;
   } catch (error) {
     throw new Error(`Error getting place by indexedId: ${error}`);
@@ -47,7 +47,7 @@ const getViewablePlaces = async (creatorId: string) => {
         { creatorId: creatorId },
         { isPublic: true }
       ]
-    })
+    }).populate('discoveredBy.user', 'username');
     return places;
   } catch (error) {
     throw new Error(`Error getting available places: ${error}`);
@@ -57,7 +57,7 @@ const getViewablePlaces = async (creatorId: string) => {
 // Just all public places
 const getPublicPlaces = async () => {
   try {
-    const places = await Place.find({ isPublic: true });
+    const places = await Place.find({ isPublic: true }).populate('discoveredBy.user', 'username');
     return places
   } catch (error) {
     throw new Error(`Error getting public places: ${error}`)
@@ -66,7 +66,7 @@ const getPublicPlaces = async () => {
 
 const updatePlace = async (placeId: string, placeData: IPlace) => {
   try {
-    const place = await Place.findByIdAndUpdate(placeId, placeData);
+    const place = await Place.findByIdAndUpdate(placeId, placeData).populate('discoveredBy.user', 'username');
     return place
   } catch (error) {
     throw new Error(`Error updating place: ${error}`);
@@ -97,6 +97,7 @@ const discoverPlace = async (placeId: string, userId: string) => {
 
     place.discoveredBy.push(discoveredByEntry);
     await place.save();
+    return place.populate('discoveredBy.user', 'username');
   } catch (error) {
     throw new Error(`Error discovering place: ${error}`)
   }
