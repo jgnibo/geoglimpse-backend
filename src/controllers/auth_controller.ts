@@ -23,10 +23,6 @@ const verifyUser: RequestHandler = async (req, res) => {
   const user = await User.findById(decoded.id);
   if (user) {
     // get random tile index
-    const tileIndex = Math.floor(Math.random() * 1000);
-    const frequency = Math.floor(Math.random() * 10);
-    user.tileFrequency.set(tileIndex.toString(), frequency);
-    await user.save();
     return res.json({ status: true, user });
   }
   return res.json({ status: false });
