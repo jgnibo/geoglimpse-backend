@@ -56,7 +56,6 @@ const updateUserTileFrequencyMap = async (userId: string, tileIndexedId: number,
 
     const tileIdStr = tileIndexedId.toString();
     const currFrequency = user.tileFrequency.get(tileIdStr) || 0;
-    console.log('NUM BEFORE ADDIng', currFrequency);
     user.tileFrequency.set(tileIdStr, currFrequency + frequency);
 
     const updatedUser = await user.save();

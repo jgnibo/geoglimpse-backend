@@ -30,35 +30,26 @@ wss.on('connection', (ws) => {
   const lastDate = new Date();
   const newDate = new Date();
 
-  // const previousTile = 0;
-
   ws.on('message', async (message) => {
     console.log(`Received message: ${message}`);
     const locationData: LocationMessage = JSON.parse(message.toString());
-    console.log(locationData.latitude, locationData.longitude);
     newDate.setTime(Date.now());
 
     // Check time spent since last message, credit last tile with ticks
     const secondsElapsed = (newDate.getTime() - lastDate.getTime()) / 1000;
     const ticks = secondsElapsed / 5;
     lastDate.setTime(newDate.getTime());
-    console.log('num ticks', ticks);
 
     // Right now this is crediting new tile with ticks. Need to credit old tile and then credit new tile with 1.
-
     try {
       const foundTile = await tileServices.findIntersectingTile({ type: 'Point', coordinates: [locationData.longitude, locationData.latitude] })
       if (foundTile) {
         console.log('Adding ticks to tile', ticks, foundTile.indexedId);
         const confirmation = await userServices.updateUserTileFrequencyMap(locationData.userId, foundTile.indexedId, ticks);
-        console.log('CONFIRMATION HERE', confirmation.tileFrequency.get(foundTile.indexedId.toString()));
       }
     } catch (error) {
       console.error(error);
     }
-    // Add one to next square's frequency map
-
-    console.log(lastDate)
   });
 });
 
@@ -91,8 +82,6 @@ app.use(cors({
   credentials: true, // reflecting the request's credentials mode
 }));
 
-//app.use('/auth', authRouter);
-//app.use('/s3', s3Router);
 app.use('/api', router);
 
 app.get('/', (req: Request, res: Response) => {
@@ -102,11 +91,11 @@ app.get('/', (req: Request, res: Response) => {
 
 async function start() {
   try {
-    // Connect to MongoDB
     const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/geoglimpse-dev';
     await mongoose.connect(mongoURI);
     console.log(`Mongoose connected to: ${mongoURI}`);
-    // CHANGES THIS LINE FROM APP TO SERVER TO ACCOMODATE WEB SOCKETS
+
+    // Running server here instead of app to accomodate websockets
     server.listen(port, () => {
       console.log(`Server is running at http://localhost:${port}`);
     });

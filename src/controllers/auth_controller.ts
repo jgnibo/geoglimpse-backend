@@ -26,7 +26,6 @@ const verifyUser: RequestHandler = async (req, res) => {
     const tileIndex = Math.floor(Math.random() * 1000);
     const frequency = Math.floor(Math.random() * 10);
     user.tileFrequency.set(tileIndex.toString(), frequency);
-    console.log(user.tileFrequency)
     await user.save();
     return res.json({ status: true, user });
   }
