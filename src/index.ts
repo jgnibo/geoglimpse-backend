@@ -22,6 +22,7 @@ const wss = new WebSocketServer({ server });
 interface LocationMessage {
   latitude: number;
   longitude: number;
+  userId: string;
 }
 
 wss.on('connection', (ws) => {
@@ -49,7 +50,7 @@ wss.on('connection', (ws) => {
       const foundTile = await tileServices.findIntersectingTile({ type: 'Point', coordinates: [locationData.longitude, locationData.latitude] })
       if (foundTile) {
         console.log('Adding ticks to tile', ticks, foundTile.indexedId);
-        const confirmation = await userServices.updateUserTileFrequencyMap('65eac259011b821b768653a3', foundTile.indexedId, ticks);
+        const confirmation = await userServices.updateUserTileFrequencyMap(locationData.userId, foundTile.indexedId, ticks);
         console.log('CONFIRMATION HERE', confirmation.tileFrequency.get(foundTile.indexedId.toString()));
       }
     } catch (error) {
