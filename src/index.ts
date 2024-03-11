@@ -72,7 +72,7 @@ app.use((req, res, next) => {
 
 app.use(cors({
   origin(origin, callback) {
-    const allowedOrigins = ["http://localhost:5173, https://geoglimpse-frontend.onrender.com"];
+    const allowedOrigins = ["http://localhost:5173", "https://geoglimpse-frontend.onrender.com"];
     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
