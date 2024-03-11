@@ -8,7 +8,7 @@ import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import { createServer } from 'http';
 import { Server as WebSocketServer } from 'ws';
-import { tileServices } from './services';
+import { tileServices, userServices } from './services';
 
 dotenv.config();
 
@@ -45,7 +45,7 @@ wss.on('connection', (ws) => {
       const foundTile = await tileServices.findIntersectingTile({ type: 'Point', coordinates: [locationData.longitude, locationData.latitude] })
       if (foundTile) {
         console.log('Adding ticks to tile', ticks, foundTile.indexedId);
-        //const confirmation = await userServices.updateUserTileFrequencyMap(locationData.userId, foundTile.indexedId, ticks);
+        await userServices.updateUserTileFrequencyMap(locationData.userId, foundTile.indexedId, ticks);
       }
     } catch (error) {
       console.error(error);
