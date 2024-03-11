@@ -8,7 +8,7 @@ import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import { createServer } from 'http';
 import { Server as WebSocketServer } from 'ws';
-import { tileServices, userServices } from './services';
+import { tileServices } from './services';
 
 dotenv.config();
 
@@ -45,7 +45,7 @@ wss.on('connection', (ws) => {
       const foundTile = await tileServices.findIntersectingTile({ type: 'Point', coordinates: [locationData.longitude, locationData.latitude] })
       if (foundTile) {
         console.log('Adding ticks to tile', ticks, foundTile.indexedId);
-        const confirmation = await userServices.updateUserTileFrequencyMap(locationData.userId, foundTile.indexedId, ticks);
+        //const confirmation = await userServices.updateUserTileFrequencyMap(locationData.userId, foundTile.indexedId, ticks);
       }
     } catch (error) {
       console.error(error);
@@ -72,7 +72,7 @@ app.use((req, res, next) => {
 
 app.use(cors({
   origin(origin, callback) {
-    const allowedOrigins = ["http://localhost:5173"];
+    const allowedOrigins = ["http://localhost:5173, https://geoglimpse-frontend.onrender.com"];
     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
